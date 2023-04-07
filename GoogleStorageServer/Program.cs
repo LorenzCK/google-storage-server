@@ -23,9 +23,10 @@ app.MapGet("/{*path}", async ([FromRoute] string path, HttpContext httpContext, 
 
         memoryStream.Position = 0;
         httpContext.Response.StatusCode = StatusCodes.Status200OK;
+        httpContext.Response.ContentType = data.ContentType;
         await memoryStream.CopyToAsync(httpContext.Response.Body, cancellationToken: cancellationToken);
 
-        app.Logger.LogDebug("File served");
+        app.Logger.LogDebug("Served {0} bytes as {1}", memoryStream.Length, data.ContentType);
     }
     catch (Exception ex) {
         app.Logger.LogError(ex, "Failed to serve file");
